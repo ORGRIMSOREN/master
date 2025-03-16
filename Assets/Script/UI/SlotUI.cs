@@ -1,56 +1,109 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
-namespace Mfram.Inventory{
-public class SlotUI : MonoBehaviour
+
+namespace Mfram.Inventory
 {
-    [Header("組件獲取")]
-    [SerializeField]private Image slotimage;
-    [SerializeField]private TextMeshProUGUI amountText;
-    [SerializeField]private Image slotHightlight;
-    [SerializeField]private Button button;
-    [Header("格子類型")]
-    public SlotType slotType;
-    public bool isSelected;
-    public ItemDetails itemDetails;
-    public int itemAmount;
-    public int slotIndex;
-
-    private void Start() 
+    public class SlotUI : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragHandler,IEndDragHandler
     {
-        isSelected=false;
-        if(itemDetails.itemID==0)
+        [Header("組件獲取")] [SerializeField] private Image slotimage;
+        [SerializeField] private TextMeshProUGUI amountText;
+        public Image slotHightlight;
+        [SerializeField] private Button button;
+        [Header("格子類型")] public SlotType slotType;
+        public bool isSelected;
+        public ItemDetails itemDetails;
+        public int itemAmount;
+        public int slotIndex;
+        private IPointerClickHandler _pointerClickHandlerImplementation;
+        private InventoryUI inventoryUI => GetComponentInParent<InventoryUI>();
+        private void Start()
         {
-            UpdateEmptySlot();
-        }    
+            isSelected = false;
+            if (itemDetails.itemID == 0)
+            {
+                UpdateEmptySlot();
+            }
+        }
+
+        /// <summary>
+        /// 更新格子UI和信息
+        /// </summary>
+        /// <param name="item">ItemDetails</param>
+        /// <param name="amount">持有数量</param>
+        public void UpdateSlot(ItemDetails item, int amount)
+        {
+            itemDetails = item;
+            slotimage.sprite = item.itemIcon;
+            itemAmount = amount;
+            slotimage.enabled = true;
+            amountText.text = amount.ToString();
+            button.interactable = true;
+        }
+
+        /// <summary>
+        /// 讲Slot更新为空
+        /// </summary>
+        public void UpdateEmptySlot()
+        {
+            if (isSelected)
+            {
+                isSelected = false;
+            }
+
+            slotimage.enabled = false;
+            amountText.text = string.Empty;
+            button.interactable = false;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if(itemDetails.itemID == 0)return;
+            isSelected =!isSelected;
+            slotHightlight.gameObject.SetActive(isSelected);
+            
+            inventoryUI.UpdateSlotHightlight(slotIndex);
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (itemAmount!=0)
+            {
+                inventoryUI.dragitem.enabled = true;
+                inventoryUI.dragitem.sprite = slotimage.sprite;
+                inventoryUI.dragitem.SetNativeSize();
+                
+                isSelected = true;
+                inventoryUI.UpdateSlotHightlight(slotIndex);
+            }
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            inventoryUI.dragitem.transform.position=Input.mousePosition;
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            inventoryUI.dragitem.enabled = false;
+            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
+            if (eventData.pointerCurrentRaycast.gameObject != null)
+            {
+                if (eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>()==null)return;
+                var targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>();
+                int targetIndex = targetSlot.slotIndex;
+
+                if (slotType == SlotType.Bag && targetSlot.slotType == SlotType.Bag)
+                {
+                    InventoryManager.Instance.SwapItem(slotIndex, targetIndex);
+                }
+                
+                    
+                
+            }
+        }
     }
-    /// <summary>
-    /// 更新格子UI和信息
-    /// </summary>
-    /// <param name="item">ItemDetails</param>
-    /// <param name="amount">持有数量</param>
-    public void UpdateSlot(ItemDetails item,int amount)
-    {
-        itemDetails=item;
-        slotimage.sprite=item.itemIcon;
-        itemAmount=amount;
-        slotimage.enabled=true;
-        amountText.text=amount.ToString();
-        button.interactable=true;
-    }
-    /// <summary>
-    /// 讲Slot更新为空
-    /// </summary>
-    public void UpdateEmptySlot()
-{
-    if(isSelected)
-    {
-        isSelected=false;
-    }
-    slotimage.enabled=false;
-    amountText.text=string.Empty;
-    button.interactable=false;
 }
-}
-}
+    

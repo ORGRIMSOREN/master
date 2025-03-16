@@ -2,15 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace Mfram.Inventory
 {
     public class InventoryManager : Singleton<InventoryManager>
     {
-        public ItemDataList_SO itemDataList_SO;
-        public InventoryBag_SO PlayerBag;
+        [SerializeField]public ItemDataList_SO itemDataList_SO;
+        [SerializeField]public InventoryBag_SO PlayerBag;
         private void Start() 
         {
+            
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Player,PlayerBag.itemList);
         }
         public ItemDetails GetItemDetails(int ID)
@@ -49,6 +51,7 @@ namespace Mfram.Inventory
                     return true;
             }
             return false;
+            
         }
 
         /// <summary>
@@ -76,13 +79,20 @@ namespace Mfram.Inventory
         {
             if (index == -1 && CheckBagCapacity()) // 背包沒有該物品 同時有空位
             {
-                var item = new InventoryItem { itemID = ID, itemAmount = amount };
+                var playerBagItem = new InventoryItem { itemID = ID, itemAmount = amount };
                 for (int i = 0; i < PlayerBag.itemList.Count; i++)
                 {
                     if (PlayerBag.itemList[i].itemID == 0)
                     {
-                        PlayerBag.itemList[i] = item; // 放置新物品到空位
+                        PlayerBag.itemList[i] = playerBagItem; // 放置新物品到空位
                         break;
+                    }
+                    else    //背包有这个物品
+                    {
+                        int currentAmount = PlayerBag.itemList[index].itemAmount + amount;
+                        var item = new InventoryItem { itemID = ID, itemAmount = currentAmount };
+
+                        PlayerBag.itemList[index] = item;
                     }
                 }
             }
@@ -95,5 +105,27 @@ namespace Mfram.Inventory
             
 
         }
+
+        public void SwapItem(int fromIndex, int targetIndex)
+        {
+            InventoryItem currentItem = PlayerBag.itemList[fromIndex];
+            InventoryItem targeItem = PlayerBag.itemList[targetIndex];
+
+            if (targeItem.itemID !=0)
+            {
+                
+                PlayerBag.itemList[fromIndex] = targeItem;
+                PlayerBag.itemList[targetIndex] = currentItem;
+            }
+            else
+            {
+                PlayerBag.itemList[targetIndex] = currentItem;
+                PlayerBag.itemList[fromIndex] = new InventoryItem();
+            }
+            
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player,PlayerBag.itemList);
+        }
     }
+    
+    
 }

@@ -1,12 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 namespace Mfram.Inventory
+
 {
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField]private SlotUI[] playerSlot;
-
+    [SerializeField]private GameObject bagui;
+    private bool bagopened;
+    [Header("拖曳圖片")] public Image dragitem;
+    
     private void OnEnable() 
     {
         EventHandler.UpdateInventoryUI+=OnUpdateInventoryUI;
@@ -22,9 +27,21 @@ public class InventoryUI : MonoBehaviour
         {
             playerSlot[i].slotIndex = i;
         }    
+        bagopened=bagui.activeInHierarchy;
+        
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            OpenBagUI();
+        }
+    }
+
     private void OnUpdateInventoryUI(InventoryLocation location, List<InventoryItem> list)
     {
+        
         switch (location)
         {
             case InventoryLocation.Player:
@@ -44,7 +61,27 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    public void OpenBagUI()
+    {
+        bagopened= !bagopened;
+        bagui.SetActive(bagopened);
+    }
 
+    public void UpdateSlotHightlight(int index)
+    {
+        foreach (var slot in playerSlot)
+        {
+            if (slot.isSelected && slot.slotIndex == index)
+            {
+                slot.slotHightlight.gameObject.SetActive(true);
+            }
+            else
+            {
+                slot.isSelected = false;
+                slot.slotHightlight.gameObject.SetActive(false);
+            }
+        }
+    }
 
 }
 }
