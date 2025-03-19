@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.Timeline;
 using UnityEngine.EventSystems;
 
 
@@ -99,9 +100,20 @@ namespace Mfram.Inventory
                 {
                     InventoryManager.Instance.SwapItem(slotIndex, targetIndex);
                 }
+
+                inventoryUI.UpdateSlotHightlight(-1);
                 
-                    
+            }
+            else
+            {
+                if (itemDetails.canDropped)
+                {
+
+                var pos=Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
                 
+                EventHandler.CallInstantiateItemInScene(itemDetails.itemID, pos );
+
+                }
             }
         }
     }

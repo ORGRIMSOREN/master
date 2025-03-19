@@ -87,13 +87,7 @@ namespace Mfram.Inventory
                         PlayerBag.itemList[i] = playerBagItem; // 放置新物品到空位
                         break;
                     }
-                    else    //背包有这个物品
-                    {
-                        int currentAmount = PlayerBag.itemList[index].itemAmount + amount;
-                        var item = new InventoryItem { itemID = ID, itemAmount = currentAmount };
-
-                        PlayerBag.itemList[index] = item;
-                    }
+                    
                 }
             }
             else if (index >= 0 && index < PlayerBag.itemList.Count)
