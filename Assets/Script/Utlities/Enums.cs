@@ -8,10 +8,10 @@ public enum ItemType
 }
 public enum SlotType
 {
-    Bag,Box,Shop,
+    Bag,Box,Shop,Hotbar
 }
 public enum InventoryLocation
 {
-    Player,Box,
+    Player,Box,Hotbar
 }
 
