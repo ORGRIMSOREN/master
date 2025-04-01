@@ -13,8 +13,6 @@ namespace Mfram.Inventory
         [SerializeField] private TextMeshProUGUI amountText;
         public Image slotHightlight;
         [SerializeField] private Button button;
-         // 快捷欄槽位
-        public InventoryLocation containerType;
         [Header("格子類型")] public SlotType slotType;
         public bool isSelected;
         public ItemDetails itemDetails;
@@ -91,49 +89,31 @@ namespace Mfram.Inventory
         public void OnEndDrag(PointerEventData eventData)
         {
             inventoryUI.dragitem.enabled = false;
-    
+            Debug.Log(eventData.pointerCurrentRaycast.gameObject);
             if (eventData.pointerCurrentRaycast.gameObject != null)
             {
-                SlotUI targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>();
-                if (targetSlot == null)
+                if (eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>()==null)return;
+                var targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>();
+                int targetIndex = targetSlot.slotIndex;
+
+                if (slotType == SlotType.Bag && targetSlot.slotType == SlotType.Bag)
                 {
-                    targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<SlotUI>();
+                    InventoryManager.Instance.SwapItem(slotIndex, targetIndex);
                 }
-        
-                if (targetSlot != null && targetSlot != this)
-                {
-                    Debug.Log($"嘗試交換: 從 {containerType}[{slotIndex}] 到 {targetSlot.containerType}[{targetSlot.slotIndex}]");
-            
-                    // 同容器內交換
-                    if (containerType == targetSlot.containerType)
-                    {
-                        InventoryManager.Instance.SwapItem(slotIndex, targetSlot.slotIndex, containerType);
-                    }
-                    // 跨容器交換
-                    else
-                    {
-                        InventoryManager.Instance.SwapItemBetweenContainers(
-                            containerType, slotIndex,
-                            targetSlot.containerType, targetSlot.slotIndex);
-                    }
-                }
-        
-                isSelected = false;
+
                 inventoryUI.UpdateSlotHightlight(-1);
+                
             }
             else
             {
-                // 丟棄物品的邏輯...
                 if (itemDetails.canDropped)
                 {
-                    var pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
-                        -Camera.main.transform.position.z));
-                    EventHandler.CallInstantiateItemInScene(itemDetails.itemID, pos);
-                }
 
-                // 重置選中狀態
-                isSelected = false;
-                inventoryUI.UpdateSlotHightlight(-1);
+                var pos=Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+                
+                EventHandler.CallInstantiateItemInScene(itemDetails.itemID, pos );
+
+                }
             }
         }
     }

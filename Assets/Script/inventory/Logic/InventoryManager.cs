@@ -8,21 +8,18 @@ namespace Mfram.Inventory
 {
     public class InventoryManager : Singleton<InventoryManager>
     {
-        [SerializeField] public ItemDataList_SO itemDataList_SO;
-        [SerializeField] public InventoryBag_SO PlayerBag;
-        [SerializeField] public InventoryBag_SO HotbarBag;
-
-        private void Start()
+        [SerializeField]public ItemDataList_SO itemDataList_SO;
+        [SerializeField]public InventoryBag_SO PlayerBag;
+        private void Start() 
         {
-
-            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, PlayerBag.itemList);
+            
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player,PlayerBag.itemList);
         }
-
         public ItemDetails GetItemDetails(int ID)
         {
             return itemDataList_SO.ItemDetailsList.Find(i => i.itemID == ID);
         }
-
+        
         /// <summary>
         /// 添加物品到Player背包里
         /// </summary>
@@ -38,9 +35,8 @@ namespace Mfram.Inventory
             {
                 Destroy(item.gameObject);
             }
-
             //更新UI
-            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, PlayerBag.itemList);
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player,PlayerBag.itemList);
         }
 
         /// <summary>
@@ -54,9 +50,8 @@ namespace Mfram.Inventory
                 if (PlayerBag.itemList[i].itemID == 0)
                     return true;
             }
-
             return false;
-
+            
         }
 
         /// <summary>
@@ -71,7 +66,6 @@ namespace Mfram.Inventory
                 if (PlayerBag.itemList[i].itemID == ID)
                     return i;
             }
-
             return -1;
         }
 
@@ -93,7 +87,7 @@ namespace Mfram.Inventory
                         PlayerBag.itemList[i] = playerBagItem; // 放置新物品到空位
                         break;
                     }
-
+                    
                 }
             }
             else if (index >= 0 && index < PlayerBag.itemList.Count)
@@ -102,27 +96,19 @@ namespace Mfram.Inventory
                 var item = new InventoryItem { itemID = ID, itemAmount = currentAmount };
                 PlayerBag.itemList[index] = item;
             }
-
+            
 
         }
 
-        public void SwapItem(int fromIndex, int targetIndex,InventoryLocation location)
+        public void SwapItem(int fromIndex, int targetIndex)
         {
-            InventoryItem currentItem = new InventoryItem
-            {
-                itemID = PlayerBag.itemList[fromIndex].itemID,
-                itemAmount = PlayerBag.itemList[fromIndex].itemAmount
-            };
+            InventoryItem currentItem = PlayerBag.itemList[fromIndex];
+            InventoryItem targeItem = PlayerBag.itemList[targetIndex];
 
-            InventoryItem targetItem = new InventoryItem
+            if (targeItem.itemID !=0)
             {
-                itemID = PlayerBag.itemList[targetIndex].itemID,
-                itemAmount = PlayerBag.itemList[targetIndex].itemAmount
-            };
-
-            if (targetItem.itemID != 0)
-            {
-                PlayerBag.itemList[fromIndex] = targetItem;
+                
+                PlayerBag.itemList[fromIndex] = targeItem;
                 PlayerBag.itemList[targetIndex] = currentItem;
             }
             else
@@ -130,53 +116,10 @@ namespace Mfram.Inventory
                 PlayerBag.itemList[targetIndex] = currentItem;
                 PlayerBag.itemList[fromIndex] = new InventoryItem();
             }
-
-            // 確保 UI 更新
-            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player, PlayerBag.itemList);
+            
+            EventHandler.CallUpdateInventoryUI(InventoryLocation.Player,PlayerBag.itemList);
         }
-
-        public void SwapItemBetweenContainers(
-            InventoryLocation fromLocation, int fromIndex,
-            InventoryLocation toLocation, int toIndex)
-        {
-            List<InventoryItem> fromList = GetItemList(fromLocation);
-            List<InventoryItem> toList = GetItemList(toLocation);
-
-            if (fromList != null && toList != null)
-            {
-                InventoryItem fromItem = new InventoryItem
-                {
-                    itemID = fromList[fromIndex].itemID,
-                    itemAmount = fromList[fromIndex].itemAmount
-                };
-
-                InventoryItem toItem = new InventoryItem
-                {
-                    itemID = toList[toIndex].itemID,
-                    itemAmount = toList[toIndex].itemAmount
-                };
-
-                fromList[fromIndex] = toItem;
-                toList[toIndex] = fromItem;
-
-                EventHandler.CallUpdateInventoryUI(fromLocation, fromList);
-                EventHandler.CallUpdateInventoryUI(toLocation, toList);
-            }
-        }
-
-        private List<InventoryItem> GetItemList(InventoryLocation location)
-        {
-            switch (location)
-            {
-                case InventoryLocation.Player:
-                    return PlayerBag.itemList;
-                case InventoryLocation.Hotbar:
-                    return HotbarBag.itemList;
-                default:
-                    return null;
-            }
-
-        }
-
     }
+    
+    
 }

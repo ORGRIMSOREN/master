@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemList:
   - itemID: 1008
-    itemAmount: 3
-  - itemID: 0
-    itemAmount: 0
-  - itemID: 0
-    itemAmount: 0
-  - itemID: 1001
     itemAmount: 2
   - itemID: 0
     itemAmount: 0
-  - itemID: 1024
-    itemAmount: 1
+  - itemID: 0
+    itemAmount: 0
+  - itemID: 0
+    itemAmount: 0
+  - itemID: 0
+    itemAmount: 0
+  - itemID: 0
+    itemAmount: 0
   - itemID: 0
     itemAmount: 0
   - itemID: 0

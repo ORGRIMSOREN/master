@@ -7,10 +7,8 @@ namespace Mfram.Inventory
 {
 public class InventoryUI : MonoBehaviour
 {
-    
+    [SerializeField]private SlotUI[] playerSlot;
     [SerializeField]private GameObject bagui;
-    [SerializeField] private SlotUI[] playerSlot; // 背包槽位
-    [SerializeField] private SlotUI[] hotbarSlot;
     private bool bagopened;
     [Header("拖曳圖片")] public Image dragitem;
     
@@ -24,21 +22,13 @@ public class InventoryUI : MonoBehaviour
     }
         private void Start() 
     {
-        // 初始化背包槽位
+        //給格子添加序號
         for (int i = 0; i < playerSlot.Length; i++)
         {
             playerSlot[i].slotIndex = i;
-            playerSlot[i].containerType = InventoryLocation.Player;
-        }
-    
-        // 初始化快捷欄槽位
-        for (int i = 0; i < hotbarSlot.Length; i++)
-        {
-            hotbarSlot[i].slotIndex = i;
-            hotbarSlot[i].containerType = InventoryLocation.Hotbar;
-        }
-    
-        bagopened = bagui.activeInHierarchy;
+        }    
+        bagopened=bagui.activeInHierarchy;
+        
     }
 
     private void Update()
@@ -55,27 +45,19 @@ public class InventoryUI : MonoBehaviour
         switch (location)
         {
             case InventoryLocation.Player:
-                UpdateSlots(playerSlot, list);
+                for (int i = 0; i < playerSlot.Length; i++)
+                {
+                    if (list[i].itemAmount>0)
+                    {
+                        var item=InventoryManager.Instance.GetItemDetails(list[i].itemID);
+                        playerSlot[i].UpdateSlot(item,list[i].itemAmount);
+                    }
+                    else
+                    {
+                     playerSlot[i].UpdateEmptySlot();   
+                    }
+                }
                 break;
-            case InventoryLocation.Hotbar:
-                UpdateSlots(hotbarSlot, list);
-                break;
-        }
-    }
-
-    private void UpdateSlots(SlotUI[] slots, List<InventoryItem> items)
-    {
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (i < items.Count && items[i].itemAmount > 0)
-            {
-                var item = InventoryManager.Instance.GetItemDetails(items[i].itemID);
-                slots[i].UpdateSlot(item, items[i].itemAmount);
-            }
-            else
-            {
-                slots[i].UpdateEmptySlot();
-            }
         }
     }
 
@@ -87,16 +69,7 @@ public class InventoryUI : MonoBehaviour
 
     public void UpdateSlotHightlight(int index)
     {
-        // 更新背包槽位高亮
-        UpdateSlotArrayHighlight(playerSlot, index);
-    
-        // 更新快捷欄槽位高亮
-        UpdateSlotArrayHighlight(hotbarSlot, index);
-    }
-
-    private void UpdateSlotArrayHighlight(SlotUI[] slots, int index)
-    {
-        foreach (var slot in slots)
+        foreach (var slot in playerSlot)
         {
             if (slot.isSelected && slot.slotIndex == index)
             {
