@@ -100,25 +100,28 @@ namespace Mfram.Inventory
 
         }
 
-        public void SwapItem(int fromIndex, int targetIndex)
+        public void SwapItem(int SlotIndex, int targetIndex)
         {
-            InventoryItem currentItem = PlayerBag.itemList[fromIndex];
+            InventoryItem currentItem = PlayerBag.itemList[SlotIndex];
             InventoryItem targeItem = PlayerBag.itemList[targetIndex];
 
             if (targeItem.itemID !=0)
             {
                 
-                PlayerBag.itemList[fromIndex] = targeItem;
+                PlayerBag.itemList[SlotIndex] = targeItem;
                 PlayerBag.itemList[targetIndex] = currentItem;
             }
             else
             {
                 PlayerBag.itemList[targetIndex] = currentItem;
-                PlayerBag.itemList[fromIndex] = new InventoryItem();
+                PlayerBag.itemList[SlotIndex] = new InventoryItem();
             }
+
+            
             
             EventHandler.CallUpdateInventoryUI(InventoryLocation.Player,PlayerBag.itemList);
         }
+        
     }
     
     

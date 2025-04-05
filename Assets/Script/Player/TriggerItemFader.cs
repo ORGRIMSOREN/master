@@ -1,29 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerItemFader : MonoBehaviour
+namespace Script.Player
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    public class TriggerItemFader : MonoBehaviour
     {
-        ItemFader[] faders = other.GetComponentsInChildren<ItemFader>();
-        if(faders.Length > 0 )
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            foreach( var item in faders )
+            ItemFader[] faders = other.GetComponentsInChildren<ItemFader>();
+            if(faders.Length > 0 )
             {
-                item.FadeOut();
+                foreach( var item in faders )
+                {
+                    item.FadeOut();
+                }
             }
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        ItemFader[] faders = other.GetComponentsInChildren<ItemFader>();
-        if (faders.Length > 0)
+        private void OnTriggerExit2D(Collider2D other)
         {
-            foreach (var item in faders)
+            ItemFader[] faders = other.GetComponentsInChildren<ItemFader>();
+            if (faders.Length > 0)
             {
-                item.FadeIn();
+                foreach (var item in faders)
+                {
+                    item.FadeIn();
+                }
             }
         }
     }

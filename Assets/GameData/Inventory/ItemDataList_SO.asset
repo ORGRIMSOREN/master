@@ -102,13 +102,13 @@ MonoBehaviour:
     itemType: 0
     itemIcon: {fileID: 21300000, guid: a4cf1d099c0994049a38e73bf9d629dd, type: 3}
     itemonWorld: {fileID: 21300000, guid: 738078985c017481f8d443cf821e26b5, type: 3}
-    itemDescription: 
+    itemDescription: "\u5357\u74DC\u7684baby"
     itemUseRadius: 0
     canPickup: 1
     canDropped: 0
     canCarried: 1
-    itemPrice: 0
-    sellPercentage: 0
+    itemPrice: 10
+    sellPercentage: 0.5
   - itemID: 1009
     itemName: "\u8543\u8304\u7A2E\u5B50"
     itemType: 0
@@ -281,7 +281,7 @@ MonoBehaviour:
     itemName: "\u6728\u982D"
     itemType: 1
     itemIcon: {fileID: 21300000, guid: 6bdcabcb3e8684660981c3dbfa135c8d, type: 3}
-    itemonWorld: {fileID: 0}
+    itemonWorld: {fileID: 21300000, guid: 018bd79f696fb400584536e445976758, type: 3}
     itemDescription: 
     itemUseRadius: 2
     canPickup: 1

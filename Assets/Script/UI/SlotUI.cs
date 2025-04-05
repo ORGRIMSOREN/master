@@ -1,25 +1,36 @@
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using UnityEditor.Timeline;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 namespace Mfram.Inventory
 {
-    public class SlotUI : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragHandler,IEndDragHandler
+    public class SlotUI : MonoBehaviour , IPointerClickHandler , IBeginDragHandler , IDragHandler , IEndDragHandler
     {
-        [Header("組件獲取")] [SerializeField] private Image slotimage;
-        [SerializeField] private TextMeshProUGUI amountText;
+        [Header("組件獲取")]
+        [SerializeField]
+        private Image slotimage;
+
+        [SerializeField]
+        private TextMeshProUGUI amountText;
+
         public Image slotHightlight;
-        [SerializeField] private Button button;
-        [Header("格子類型")] public SlotType slotType;
-        public bool isSelected;
-        public ItemDetails itemDetails;
-        public int itemAmount;
-        public int slotIndex;
+
+        [SerializeField]
+        private Button button;
+
+        [Header("格子類型")]
+        public SlotType slotType;
+
+        public  bool                 isSelected;
+        public  ItemDetails          itemDetails;
+        public  int                  itemAmount;
+        public  int                  slotIndex;
         private IPointerClickHandler _pointerClickHandlerImplementation;
-        private InventoryUI inventoryUI => GetComponentInParent<InventoryUI>();
+        private InventoryUI          inventoryUI => GetComponentInParent<InventoryUI>();
+
         private void Start()
         {
             isSelected = false;
@@ -34,14 +45,16 @@ namespace Mfram.Inventory
         /// </summary>
         /// <param name="item">ItemDetails</param>
         /// <param name="amount">持有数量</param>
-        public void UpdateSlot(ItemDetails item, int amount)
+        public void UpdateSlot(ItemDetails item , int amount)
         {
-            itemDetails = item;
-            slotimage.sprite = item.itemIcon;
-            itemAmount = amount;
-            slotimage.enabled = true;
-            amountText.text = amount.ToString();
+            itemDetails         = item;
+            slotimage.sprite    = item.itemIcon;
+            itemAmount          = amount;
+            slotimage.enabled   = true;
+            amountText.text     = amount.ToString();
             button.interactable = true;
+            
+
         }
 
         /// <summary>
@@ -54,28 +67,33 @@ namespace Mfram.Inventory
                 isSelected = false;
             }
 
-            slotimage.enabled = false;
-            amountText.text = string.Empty;
+            slotimage.enabled   = false;
+            amountText.text     = string.Empty;
             button.interactable = false;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if(itemDetails.itemID == 0)return;
-            isSelected =!isSelected;
-            slotHightlight.gameObject.SetActive(isSelected);
+            if (itemAmount== 0) return;
+            isSelected = !isSelected;
             
+            
+
             inventoryUI.UpdateSlotHightlight(slotIndex);
+            if (slotType==SlotType.Bag)
+            {
+                EventHandler.CallItemSelectedEvent(itemDetails , isSelected);
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (itemAmount!=0)
+            if (itemAmount != 0)
             {
-                inventoryUI.dragitem.enabled = true;
-                inventoryUI.dragitem.sprite = slotimage.sprite;
+                inventoryUI.dragitem.enabled       = true;
+                inventoryUI.dragitem.sprite        = slotimage.sprite;
                 inventoryUI.dragitem.SetNativeSize();
-                
+
                 isSelected = true;
                 inventoryUI.UpdateSlotHightlight(slotIndex);
             }
@@ -83,7 +101,7 @@ namespace Mfram.Inventory
 
         public void OnDrag(PointerEventData eventData)
         {
-            inventoryUI.dragitem.transform.position=Input.mousePosition;
+            inventoryUI.dragitem.transform.position = Input.mousePosition;
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -92,30 +110,38 @@ namespace Mfram.Inventory
             Debug.Log(eventData.pointerCurrentRaycast.gameObject);
             if (eventData.pointerCurrentRaycast.gameObject != null)
             {
-                if (eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>()==null)return;
-                var targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<SlotUI>();
-                int targetIndex = targetSlot.slotIndex;
-
+                if (eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<SlotUI>()==null)return;
+                var targetSlot = eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<SlotUI>();
+                
+                if (targetSlot == null) return;
+                var targetIndex = targetSlot.slotIndex;
+        
                 if (slotType == SlotType.Bag && targetSlot.slotType == SlotType.Bag)
                 {
-                    InventoryManager.Instance.SwapItem(slotIndex, targetIndex);
+                    InventoryManager.Instance.SwapItem(slotIndex , targetIndex);
                 }
-
+        
                 inventoryUI.UpdateSlotHightlight(-1);
-                
+        
             }
-            else
-            {
-                if (itemDetails.canDropped)
-                {
-
-                var pos=Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
-                
-                EventHandler.CallInstantiateItemInScene(itemDetails.itemID, pos );
-
-                }
-            }
+        
+        
+            // else
+            // {
+            //     if (itemDetails.canDropped)
+            //     {
+            //
+            //     var pos=Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+            //     
+            //     EventHandler.CallInstantiateItemInScene(itemDetails.itemID, pos );
+            //
+            //     }
+            // }
         }
+       
+        
+
     }
 }
+
     

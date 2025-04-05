@@ -9,10 +9,16 @@ namespace Mfram.Inventory
 {
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField]private SlotUI[] playerSlot;
+
+    [SerializeField]public ItemToolTip itemToolTip;
+    
+    [Header("玩家背包ui")]
     [SerializeField]private GameObject bagui;
     private bool bagopened;
-    [Header("拖曳圖片")] public Image dragitem;
+    [SerializeField]private SlotUI[] playerSlot;
+    
+    [Header("拖曳圖片")]
+    public Image dragitem;
     
     private void OnEnable() 
     {
