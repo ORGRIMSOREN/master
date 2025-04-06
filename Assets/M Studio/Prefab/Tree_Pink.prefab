@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 4882245418709173106}
   - component: {fileID: 5279895250539389565}
   - component: {fileID: 3321952005078568247}
+  - component: {fileID: 174927959778521926}
   m_Layer: 0
   m_Name: Tree_Trunk
   m_TagString: Untagged
@@ -209,6 +210,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.1887093, y: 2.0210433}
   m_EdgeRadius: 0
+--- !u!114 &174927959778521926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3403220445390775262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f618021226da6be4c93a841c81126d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8531030282939117109
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +234,7 @@ GameObject:
   - component: {fileID: 1342208202519388809}
   - component: {fileID: 6890316549292991528}
   - component: {fileID: 5798457318682840848}
+  - component: {fileID: 8836900606290454733}
   m_Layer: 0
   m_Name: Top
   m_TagString: Untagged
@@ -361,3 +375,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 8.727699, y: 5.0624456}
   m_EdgeRadius: 0
+--- !u!114 &8836900606290454733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8531030282939117109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f618021226da6be4c93a841c81126d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
