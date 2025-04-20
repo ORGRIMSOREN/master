@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Script.Player
@@ -13,18 +14,38 @@ namespace Script.Player
     
         private Animator[] animators;
         private bool       isMoving;
+        private bool       inputDisable ;
         private void Awake()
         {
             rb        = GetComponent<Rigidbody2D>();
             animators = GetComponentsInChildren<Animator>();
         }
+
+        private void OnEnable()
+        {
+            EventHandler.BeforeTransitionEvent += OnBeforTransitionEvent;
+            EventHandler.AfterTransitionEvent  += OnAfterTransitionEvent;
+            EventHandler.MoveToPositionEvent   += OnMoveToPositionEvent;
+        }
+        
+        private void OnDisable()
+        {
+            EventHandler.BeforeTransitionEvent -= OnBeforTransitionEvent;
+            EventHandler.AfterTransitionEvent  -= OnAfterTransitionEvent;
+            EventHandler.MoveToPositionEvent   -= OnMoveToPositionEvent;
+        }
+
         private void Update()
         {
+            if (!inputDisable) 
             PlayerInput();
+            else
+            isMoving = false;
             SwitchAnimation();
         }
         private void FixedUpdate()
         {
+            if (!inputDisable) 
             Movement();
         }
         private void PlayerInput()
@@ -51,6 +72,21 @@ namespace Script.Player
         private void Movement() 
         {
             rb.MovePosition(rb.position+movementInput*speed*Time.deltaTime);
+        }
+
+        private void OnMoveToPositionEvent(Vector3 targetPos)
+        {
+            transform.position = targetPos;
+        }
+
+        private void OnAfterTransitionEvent()
+        {
+            inputDisable = false;
+        }
+
+        private void OnBeforTransitionEvent()
+        {
+            inputDisable = true;
         }
 
         // ReSharper disable Unity.PerformanceAnalysis

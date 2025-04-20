@@ -26,13 +26,26 @@ public class AnimatorOverride : MonoBehaviour
 
    private void OnEnable()
    {
-      EventHandler.ItemSelectedEvent += OnItemSelectedEvent;
+      EventHandler.ItemSelectedEvent     += OnItemSelectedEvent;
+      EventHandler.BeforeTransitionEvent += OnBeforTransitionEvent;
+      
    }
 
+   
    private void OnDisable()
    {
-      EventHandler.ItemSelectedEvent -= OnItemSelectedEvent;
+      EventHandler.ItemSelectedEvent     -= OnItemSelectedEvent;
+      EventHandler.BeforeTransitionEvent -= OnBeforTransitionEvent;
+    
    }
+
+   private void OnBeforTransitionEvent()
+   {
+      holdItem.enabled = false;
+      SwitchAnimator(PartType.None);
+   }
+
+   
 
    private void OnItemSelectedEvent(ItemDetails itemDetails , bool isSelected)
    {

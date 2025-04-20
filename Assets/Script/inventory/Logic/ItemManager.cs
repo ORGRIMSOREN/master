@@ -13,17 +13,21 @@ namespace Mfram.Inventory
         private void OnEnable()
         {
             EventHandler.InstantiateItemInScene += OnInstantiateItemInScene;
+            EventHandler.AfterTransitionEvent   += OnAfterTransitionEvent;
         }
 
         private void OnDisable()
         {
             EventHandler.InstantiateItemInScene -= OnInstantiateItemInScene;
+            EventHandler.AfterTransitionEvent   -= OnAfterTransitionEvent;
         }
 
-        private void start()
+        private void OnAfterTransitionEvent()
         {
-            itemParent = GameObject.FindGameObjectWithTag("ItemParent").transform;
+            itemParent = GameObject.FindWithTag("ItemParent").transform;
+            
         }
+
 
         private void OnInstantiateItemInScene(int ID, Vector3 pos)
         {

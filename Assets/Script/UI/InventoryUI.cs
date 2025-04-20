@@ -22,13 +22,17 @@ public class InventoryUI : MonoBehaviour
     
     private void OnEnable() 
     {
-        EventHandler.UpdateInventoryUI+=OnUpdateInventoryUI;
+        EventHandler.UpdateInventoryUI     += OnUpdateInventoryUI;
+        EventHandler.BeforeTransitionEvent += OnBeforTransitionEvent;
     }
     private void OnDisable() 
     {
-        EventHandler.UpdateInventoryUI-=OnUpdateInventoryUI;
+        EventHandler.UpdateInventoryUI     -= OnUpdateInventoryUI;
+        EventHandler.BeforeTransitionEvent -= OnBeforTransitionEvent;
     }
-        private void Start() 
+
+
+    private void Start() 
     {
         //給格子添加序號
         for (int i = 0; i < playerSlot.Length; i++)
@@ -45,6 +49,10 @@ public class InventoryUI : MonoBehaviour
         {
             OpenBagUI();
         }
+    }
+    private void OnBeforTransitionEvent()
+    {
+        UpdateSlotHightlight(-1);
     }
 
     private void OnUpdateInventoryUI(InventoryLocation location, List<InventoryItem> list)
