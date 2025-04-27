@@ -89,7 +89,7 @@ namespace Script.Player
             inputDisable = true;
         }
 
-        // ReSharper disable Unity.PerformanceAnalysis
+        
         private void SwitchAnimation()
         {
             foreach (var anim in animators)

@@ -53,9 +53,9 @@ namespace Mfram.Transtion
             //移動人物座標
             EventHandler.CallMoveToPositionEvent(targetPos);
             
+            EventHandler.CallAfterTransitionEvent();
             yield return Fade(0);
             
-            EventHandler.CallAfterTransitionEvent();
         }
 
         private IEnumerator Fade(float targetAlpha)
