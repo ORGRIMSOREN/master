@@ -8,7 +8,9 @@ namespace Mfram.Transtion
 {
     public class TransitionManager : MonoBehaviour
     {
+        [SceneName]
         public  string      startScene = string.Empty;
+        
         private CanvasGroup fadeCanvasGroup;
         private bool        isfade;
 

@@ -7,6 +7,7 @@ namespace Mfram.Transtion
 {
     public class TP : MonoBehaviour
     {
+        [SceneName]
         public string  sceneToGo;
         public Vector3 positionToGo;
 

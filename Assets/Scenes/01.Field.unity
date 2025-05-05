@@ -2323,7 +2323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f089e8639b28b141985036d82bb40cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToGo: 02.InSide
+  sceneToGo: 02.Inside
   positionToGo: {x: -7, y: -6, z: 0}
 --- !u!61 &391744791
 BoxCollider2D:
