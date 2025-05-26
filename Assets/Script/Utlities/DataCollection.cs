@@ -76,7 +76,7 @@ public class SceneItem
 [System.Serializable]
 public class TileProperty
 {
-    public Vector2Int tilePosition;
+    public Vector2Int tileCoordinates;
     public GridType gridType;
     public bool boolTypeValue;
     
