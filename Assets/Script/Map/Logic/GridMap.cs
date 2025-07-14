@@ -2,6 +2,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+namespace Mfram.Map
+{
+    
 [ExecuteInEditMode]
 public class GridMap : MonoBehaviour
 {
@@ -69,4 +72,5 @@ public class GridMap : MonoBehaviour
         }
         
     }
+}
 }

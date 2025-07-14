@@ -13,24 +13,34 @@ public class CursorManager : MonoBehaviour
     private Sprite        currentSprite;
     private Image         cursorImage;
     private RectTransform cursorCanvas;
-
+    //鼠標檢測
+    private Camera mainCamera;
+    private Grid currentGrid;
+    
+    private Vector3 mouseWorldPos;
+    private Vector3Int mouseGridPos;
+    private bool cursorEnabled ;
     private void OnEnable()
     {
-        EventHandler.ItemSelectedEvent += OnItemSelectedEvent;
+        EventHandler.ItemSelectedEvent     += OnItemSelectedEvent;
+        EventHandler.BeforeTransitionEvent += OnBeforeTransitionEvent;
+        EventHandler.AfterTransitionEvent  += OnAfterTransitionEvent;
     }
+
 
     private void OnDisable()
     {
-        EventHandler.ItemSelectedEvent -= OnItemSelectedEvent;
-
+        EventHandler.ItemSelectedEvent     -= OnItemSelectedEvent;
+        EventHandler.BeforeTransitionEvent -= OnBeforeTransitionEvent;
+        EventHandler.AfterTransitionEvent  -= OnAfterTransitionEvent;
     }
-
     private void Start()
     {
         cursorCanvas  = GameObject.FindGameObjectWithTag("CursorCanvas").GetComponent<RectTransform>();
         cursorImage   = cursorCanvas.GetChild(0).GetComponent<Image>();
         currentSprite = normal;
         SetCursorImage(normal);
+        mainCamera = Camera.main;
     }
 
     private void Update()
@@ -38,15 +48,25 @@ public class CursorManager : MonoBehaviour
         if (cursorCanvas == null) return;
 
         cursorImage.transform.position = Input.mousePosition;
-        if (!IntractWithUi())
+        if (!IntractWithUi()&& cursorEnabled)
         {
-            
-        SetCursorImage(currentSprite);
+            SetCursorImage(currentSprite);
+            CheckCursorValid();
         }
         else
         {
             SetCursorImage(normal );
         }
+    }
+
+    private void OnBeforeTransitionEvent()
+    {
+        cursorEnabled = false;
+    }
+    private void OnAfterTransitionEvent()
+    {
+        cursorEnabled = true;
+        currentGrid   = FindObjectOfType<Grid>();
     }
     /// <summary>
     /// 設置鼠標圖片
@@ -81,6 +101,15 @@ public class CursorManager : MonoBehaviour
 
 
     }
+
+    private void CheckCursorValid()
+    {
+        mouseWorldPos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
+        mouseGridPos = currentGrid.WorldToCell(mouseWorldPos);
+        
+        Debug.Log("WorldPos"+mouseWorldPos+"GridPos"+mouseGridPos);
+    }
+    
     /// <summary>
     /// 判斷是否與ui互動
     /// </summary>

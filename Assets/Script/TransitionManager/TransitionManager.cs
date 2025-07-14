@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Mfram.Transtion
+namespace Mfram.Transition
 {
     public class TransitionManager : MonoBehaviour
     {
@@ -24,11 +24,12 @@ namespace Mfram.Transtion
             EventHandler.TransitionEvent -= OnTransitionEvent;
         }
 
-
-        private void Start()
+        
+        private IEnumerator Start()
         {
-            StartCoroutine(LoadSceneSetAtive(startScene));
             fadeCanvasGroup = FindObjectOfType<CanvasGroup>();
+            yield return LoadSceneSetAtive(startScene);
+            EventHandler.CallAfterTransitionEvent();
         }
 
         private void OnTransitionEvent(string sceneToGo , Vector3 positionToGo)
